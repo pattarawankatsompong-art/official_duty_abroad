@@ -10,7 +10,7 @@ input[type=text],input[type=date],input[type=number],select{width:100%;box-sizin
 button{font:inherit;padding:10px 18px;border-radius:8px;border:0;background:#1f5f3a;color:#fff;cursor:pointer;margin:6px 6px 0 0}button.s{background:#6b7f72}
 #go{width:100%;font-size:19px;padding:14px}small{color:#667}@media(max-width:560px){.row{grid-template-columns:1fr}}
 </style></head><body>
-<h1>สร้างแบบขออนุมัติลาไปต่างประเทศ</h1><small>ข้อมูลประมวลผลในเครื่องของคุณเท่านั้น ไม่ถูกส่งไปที่ใด</small>
+<h1>สร้างแบบขออนุมัติลาไปต่างประเทศ</h1><small>ข้อมูลประมวลผลในเครื่องของคุณเท่านั้น ไม่ถูกส่งไปที่ใด · เวอร์ชัน 3</small>
 <fieldset><legend>แบบฟอร์ม</legend><div class="chk">
 <label><input type="radio" name="kind" value="meeting" checked> ลาไปประชุม (เสนอคณบดี)</label>
 <label><input type="radio" name="kind" value="work"> ลาไปปฏิบัติงาน (เสนออธิการบดี)</label></div>
@@ -76,7 +76,7 @@ $('go').onclick=async()=>{
    project:g('project'),place:g('place'),country:g('country'),dateFrom:thd(g('dateFrom')),dateTo:thd(g('dateTo')),days:thn(g('days')),fund:g('fund'),
    docDate:thd(g('docDate')),docNo:thn(g('docNo')),attOther:$('a_other').checked?g('attOther'):'',opOther:$('op_other').checked?g('opOther'):''};
   ['t_meet','t_semi','t_work','loc_in','loc_out'].concat(CK).forEach(i=>d[i]=c(i));
-  const r=await fetch('template-'+kind()+'.docx');if(!r.ok)throw new Error('โหลดแม่แบบไม่ได้ (ต้องเปิดผ่านลิงก์เว็บ ไม่ใช่เปิดไฟล์จากเครื่องโดยตรง)');
+  const r=await fetch('template-'+kind()+'-v3.docx?'+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('โหลดแม่แบบไม่ได้ (ต้องเปิดผ่านลิงก์เว็บ ไม่ใช่เปิดไฟล์จากเครื่องโดยตรง)');
   const doc=new window.docxtemplater(new PizZip(await r.arrayBuffer()),{paragraphLoop:true,linebreaks:true,nullGetter:()=>''});
   doc.render(d);
   const blob=doc.getZip().generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',compression:'DEFLATE'});
