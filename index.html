@@ -25,7 +25,7 @@ button{font:inherit;padding:10px 18px;border-radius:8px;border:0;background:#1f5
 <div class="row"><div><label>วันที่บรรจุ</label><input type="date" id="startDate"></div><div></div>
 <div><label>ระยะเวลาการจ้าง ตั้งแต่</label><input type="date" id="contractFrom"></div><div><label>ถึง</label><input type="date" id="contractTo"></div></div>
 <button type="button" class="s" id="save">บันทึกคนนี้ไว้ในเครื่อง</button><button type="button" class="s" id="del">ลบคนที่เลือก</button></fieldset>
-<fieldset><legend>ข้อมูลการลา</legend><div class="chk">ประเภท:
+<fieldset><legend>ข้อมูลการลา</legend><div class="chk">ประเภท (ติ๊กให้ตามแบบฟอร์มที่เลือกอัตโนมัติ แก้เองได้):
 <label><input type="checkbox" id="t_meet"> ประชุม</label><label><input type="checkbox" id="t_semi"> สัมมนา</label><label><input type="checkbox" id="t_work"> ปฏิบัติงาน</label><br>ณ:
 <label><input type="radio" name="loc" id="loc_in"> ในประเทศ</label><label><input type="radio" name="loc" id="loc_out" checked> ต่างประเทศ</label></div>
 <label>โครงการ/หัวข้อ</label><input type="text" id="project">
@@ -63,12 +63,13 @@ document.querySelectorAll('input[name=kind]').forEach(r=>r.onchange=setKind);
 ['dateFrom','dateTo'].forEach(i=>$(i).onchange=days);
 $('docDate').value=new Date().toISOString().slice(0,10);$('dept').value='คณะสิ่งแวดล้อมและทรัพยากรศาสตร์';$('phone').value='๐๒-๔๑๑-๕๐๐๐ ต่อ ';
 const last=ls.get('envi_last',null);CK.forEach(i=>$(i).checked=last?!!last[i]:['a_invite','a_fund','op_agree'].includes(i));$('fund').value=ls.get('envi_fund','');
-setKind();roster();
+setKind();roster();window.addEventListener('pageshow',setKind);
 $('go').onclick=async()=>{
  const m=$('msg');m.textContent='';
  try{
   if(!$('name').value.trim()||!$('project').value.trim()||!$('dateFrom').value||!$('dateTo').value)return m.textContent='กรุณากรอก ชื่อ-สกุล โครงการ และวันที่ไป–กลับ ให้ครบ';
   if($('dateTo').value<$('dateFrom').value)return m.textContent='วันที่กลับต้องไม่ก่อนวันที่ไป';
+  {const w=kind()=='work';if(w?!$('t_work').checked:!($('t_meet').checked||$('t_semi').checked)){if(!confirm('ประเภทการลาที่ติ๊กไว้ไม่ตรงกับแบบฟอร์มที่เลือก ('+(w?'ปฏิบัติงาน':'ประชุม/สัมมนา')+')\nกด OK เพื่อสร้างไฟล์ต่อ หรือ Cancel เพื่อกลับไปแก้'))return}}
   const g=i=>$(i).value.trim(),SQ=['loc_in','loc_out','op_agree','op_other'],c=i=>SQ.includes(i)?($(i).checked?'þ':'r'):$(i).checked;
   const d={name:g('name'),position:g('position'),level:thn(g('level')),posNo:thn(g('posNo')),phone:thn(g('phone')),dept:g('dept'),
    startDate:thd(g('startDate')),contractFrom:thd(g('contractFrom')),contractTo:thd(g('contractTo')),
